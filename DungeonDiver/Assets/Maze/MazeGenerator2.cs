@@ -1,12 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MazeGenerator2 : MonoBehaviour
 {
     [SerializeField] MazeTile tilePrefab;
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject tunnel;
     [SerializeField] Vector2Int mazeSize;
     [SerializeField] bool ShowcaseOn;
+    float playerPosX;
+    float playerPosY;
+    [SerializeField] List<MazeTile> tiles;
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +30,10 @@ public class MazeGenerator2 : MonoBehaviour
 
     void GenerateMazeInstant(Vector2Int size)
     {
-        List<MazeTile> tiles = new List<MazeTile>();
+        tiles = new List<MazeTile>();
+
+        int tunnelIndex = Random.Range(1, size.x * size.y);
+        int counter = 0;
 
         // Create nodes
         for (int x = 0; x < size.x; x++)
@@ -33,6 +43,12 @@ public class MazeGenerator2 : MonoBehaviour
                 Vector3 tilePos = new Vector3(x - (size.x / 2f), y - (size.y / 2f), 0);
                 MazeTile tile = Instantiate(tilePrefab, tilePos, Quaternion.identity, transform);
                 tiles.Add(tile);
+
+                if(counter == tunnelIndex - 1)
+                {
+                    tunnel.transform.position = tilePos;
+                }
+                counter++;
             }
         }
 
@@ -133,11 +149,16 @@ public class MazeGenerator2 : MonoBehaviour
                 currentPath.RemoveAt(currentPath.Count - 1);
             }
         }
+        //Vector3 playerPos = new Vector3(playerPosX, playerPosY, 0);
+        //Instantiate(player, playerPos, Quaternion.identity, transform);
     }
 
     IEnumerator GenerateMaze(Vector2Int size)
     {
-        List<MazeTile> tiles = new List<MazeTile>();
+        tiles = new List<MazeTile>();
+
+        int tunnelIndex = Random.Range(1, size.x * size.y);
+        int counter = 0;
 
         // Create nodes
         for (int x = 0; x < size.x; x++)
@@ -147,6 +168,12 @@ public class MazeGenerator2 : MonoBehaviour
                 Vector3 tilePos = new Vector3(x - (size.x / 2f), y - (size.y / 2f), 0);
                 MazeTile tile = Instantiate(tilePrefab, tilePos, Quaternion.identity, transform);
                 tiles.Add(tile);
+
+                if (counter == tunnelIndex -1) 
+                {
+                    tunnel.transform.position = tilePos;
+                }
+                counter++;
 
                 yield return null;
             }
@@ -250,5 +277,22 @@ public class MazeGenerator2 : MonoBehaviour
             }
             yield return new WaitForSeconds(0.05f);
         }
+    }
+
+    public void endCurrentLevel()
+    {
+        playerPosX = player.transform.position.x;
+        playerPosY = player.transform.position.y;
+        //Destroy(tunnel);
+
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        GenerateMazeInstant(mazeSize);
+
+        //SceneManager.LoadScene(1);
+
     }
 }
