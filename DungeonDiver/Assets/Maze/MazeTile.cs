@@ -11,7 +11,7 @@ public class MazeTile : MonoBehaviour
     {
         if (wallToRemove >= 0 && wallToRemove < walls.Length)
         {
-            walls[wallToRemove].gameObject.SetActive(false);
+            Destroy(walls[wallToRemove].gameObject);
         }
         else
         {
@@ -21,6 +21,7 @@ public class MazeTile : MonoBehaviour
 
     public void SetState(NodeState state)
     {
+        return;
         switch (state)
         {
             case NodeState.Available:
@@ -30,5 +31,6 @@ public class MazeTile : MonoBehaviour
             case NodeState.Completed:
                 floor.material.color = Color.blue; break;
         }
+
     }
 }
