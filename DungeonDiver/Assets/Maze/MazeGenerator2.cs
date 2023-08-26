@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
+using NavMeshPlus.Components;
 
 public class MazeGenerator2 : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class MazeGenerator2 : MonoBehaviour
     float playerPosY;
     [SerializeField] List<MazeTile> tiles;
 
+    public NavMeshSurface surface;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,7 @@ public class MazeGenerator2 : MonoBehaviour
         else
         {
             GenerateMazeInstant(mazeSize);
+            surface.BuildNavMesh();
         }
     }
 
@@ -40,7 +44,8 @@ public class MazeGenerator2 : MonoBehaviour
         {
             for (int y = 0; y < size.y; y++)
             {
-                Vector3 tilePos = new Vector3(x - (size.x / 2f), y - (size.y / 2f), 0);
+                Vector3 tilePos = new Vector3((x - (size.x / 2f))*2, (y - (size.y / 2f)) * 2, 0);
+                //tilePos = tilePos * 5;
                 MazeTile tile = Instantiate(tilePrefab, tilePos, Quaternion.identity, transform);
                 tiles.Add(tile);
 
