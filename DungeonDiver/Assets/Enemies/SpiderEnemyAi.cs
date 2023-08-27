@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class SpiderEnemyAi : MonoBehaviour
 {
+    public float rotationSpeed;
+    private Vector2 direction;
+
     public Transform player;
     NavMeshAgent agent;
     // Start is called before the first frame update
@@ -20,6 +23,11 @@ public class SpiderEnemyAi : MonoBehaviour
     void Update()
     {
         agent.SetDestination(player.position);
+
+        direction = player.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion roation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = Quaternion.Slerp(transform.rotation, roation, rotationSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
