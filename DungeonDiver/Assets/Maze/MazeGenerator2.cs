@@ -15,6 +15,8 @@ public class MazeGenerator2 : MonoBehaviour
     float playerPosX;
     float playerPosY;
     [SerializeField] List<MazeTile> tiles;
+    [SerializeField] Camera cam;
+    [SerializeField] Transform ground;
 
     public NavMeshSurface surface;
 
@@ -294,6 +296,23 @@ public class MazeGenerator2 : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        mazeSize.x++;
+        if (mazeSize.x == 17)
+        {
+            mazeSize.y = 9;
+        }
+        if (mazeSize.x == 22)
+        {
+            mazeSize.y = 13;
+        }
+        if (mazeSize.x == 27)
+        {
+            mazeSize.y = 17;
+        }
+        mazeSize.y++;
+        cam.orthographicSize = cam.orthographicSize + 1;
+
+        ground.localScale = ground.localScale *3 /2;
 
         GenerateMazeInstant(mazeSize);
 
